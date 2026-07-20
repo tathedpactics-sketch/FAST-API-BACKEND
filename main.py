@@ -40,7 +40,7 @@ app = FastAPI()
 # CRITICAL: This allows your frontend (even if running on localhost) to talk to this backend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, replace "*" with your actual frontend URL
+    allow_origins=["https://pactom-lists.netlify.app"],  # In production, replace "*" with your actual frontend URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
