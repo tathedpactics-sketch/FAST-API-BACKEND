@@ -1,3 +1,25 @@
+import os
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, declarative_base
+
+# 1. Look for a DATABASE_URL environment variable provided by the cloud host.
+#    If not found (e.g. running locally on your laptop), fall back to local SQLite.
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./users.db")
+
+# 2. Fix compatibility: Most cloud providers format PostgreSQL links as "postgres://", 
+#    but SQLAlchemy specifically requires "postgresql://"
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
+# 3. Create the SQLAlchemy Engine dynamically
+if DATABASE_URL.startswith("sqlite"):
+    engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+else:
+    engine = create_engine(DATABASE_URL)
+
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Base = declarative_base()
+
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr
