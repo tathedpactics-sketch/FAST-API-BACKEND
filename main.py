@@ -95,4 +95,27 @@ def create_user(user_data: UserCreate, db: Session = Depends(get_db)):
 @app.get("/api/users")
 def get_all_users(db: Session = Depends(get_db)):
     # Optional endpoint just to see what's stored
-    return db.query(DBUser).all()
+    return db.query(DBUser).all)
+    # ==========================================
+# DELETE ENDPOINTS
+# ==========================================
+
+# 1. Delete a single user by ID
+@app.delete("/api/users/{user_id}")
+def delete_user(user_id: int, db: Session = Depends(get_db)):
+    user = db.query(DBUser).filter(DBUser.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    db.delete(user)
+    db.commit()
+    return {"message": f"User {user_id} deleted successfully"}
+
+# 2. Clear all users from the database
+@app.delete("/api/users")
+def clear_all_users(db: Session = Depends(get_db)):
+    # Deletes all rows in the users table
+    db.query(DBUser).delete()
+    db.commit()
+    return {"message": "All users have been cleared"}
+
