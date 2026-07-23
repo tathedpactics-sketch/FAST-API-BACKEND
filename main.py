@@ -95,7 +95,7 @@ def create_user(user_data: UserCreate, db: Session = Depends(get_db)):
 @app.get("/api/users")
 def get_all_users(db: Session = Depends(get_db)):
     # Optional endpoint just to see what's stored
-    return db.query(DBUser).all)
+    return db.query(DBUser).all()
     # ==========================================
 # DELETE ENDPOINTS
 # ==========================================
